@@ -16,23 +16,23 @@ $order = new Receipt();
 
 function parseToppings(array $toppings, $order)
 {
-    if (in_array(1, $toppings) && in_array(2, $toppings)) {
-        $order->addPizza(
-            new SausageMushroomPizza()
-        );
-    } elseif (in_array(1, $toppings)) {
-        $order->addPizza(
-            new SausagePizza()
-        );
-    } elseif (in_array(2, $toppings)) {
-        $order->addPizza(
-            new MushroomPizza()
-        );
-    } else {
-        $order->addPizza(
-            new Pizza()
-        );
+    $pizza = new Pizza();
+
+    foreach ($toppings as $topping) {
+        switch ($topping) {
+            case '1':
+                $pizza = new PizzaWithSausage($pizza);
+                break;
+            case '2':
+                $pizza = new PizzaWithMushrooms($pizza);
+                break;
+            case '3':
+                $pizza = new PizzaWithPepperoni($pizza);
+                break;
+        }
     }
+
+    $order->addPizza($pizza);
 }
 
 $quit = false;
@@ -50,7 +50,7 @@ while (! $quit) {
             echo PHP_EOL . PHP_EOL . '----------------------------------------' . PHP_EOL . PHP_EOL;
             break;
         case 'y':
-            echo '[code] Available Toppings : [0] Cheese Only, [1] Sausage, [2] Mushrooms' . PHP_EOL;
+            echo '[code] Available Toppings : [0] Cheese, [1] Sausage, [2] Mushrooms, [3] Pepperoni' . PHP_EOL;
             echo 'Enter topping codes separated by comma (,) : ';
             $toppings = trim(fgets(STDIN));
             $toppings = explode(',', $toppings);
