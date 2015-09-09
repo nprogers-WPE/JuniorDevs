@@ -1,4 +1,8 @@
-class UpdateWordPress
+#!/usr/bin/env python
+
+from time import sleep
+
+class UpdateWordPress :
     states = [
             'not_started',
             'pre-update smoketest',
@@ -9,24 +13,42 @@ class UpdateWordPress
             ]
 
     def __init__(self) :
-        self.state = 0
+        self.observers = []
 
-    def get_state(self) :
-        return states[self.state]
+    def attach_observer(self, observer) :
+        self.observers.append(observer)
 
-    def update(self) :
-        #do stuff and update state
+    def detach_observer(self, observer) :
+        self.observers.remove(observer)
+
+    def notify(self) :
+        for observer in self.observers :
+            observer.update(self.states[self.s;sptate])
+
+    def run(self) :
+        for i in range(len(self.states)) :
+            self.state = i
+            self.notify()
+            sleep(3) # doin' stuff
 
 
 class UserInterface :
-    def __init__(self, update_object) :
-        self.update_object = update_object
-
-    def update_my_site(self) :
-        self.update_object.update()
+    def __init__(self, name) :
+        self.name = name
+        self.state = None
 
     def update(self, state) :
         self.state = state
+        print "Name: {}, State: {}".format(self.name, self.state)
 
     def hows_it_going(self) :
         return self.state
+
+observer1 = UserInterface('instance1')
+observer2 = UserInterface('instance2')
+
+observable = UpdateWordPress()
+observable.attach_observer(observer1)
+observable.attach_observer(observer2)
+
+observable.run()
